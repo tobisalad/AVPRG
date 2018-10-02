@@ -31,7 +31,7 @@
     gainNode.connect(context.destination);
     let drumArray = document.getElementsByClassname('drumpad');
     let soundArray = [];
-    for (let i = 0; i < 4, i++) {
+    for (let i = 0; i < 4; i++) {
       let name = "sound" + (i+1);
       soundArray.push(context.createMediaElementSource(new Audio('sounds/sound' + (i+1) + '.wav') ) );
       soundArray[i].connect(gainNode);
