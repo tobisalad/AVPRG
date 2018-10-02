@@ -36,12 +36,14 @@
       soundArray.push(context.createMediaElementSource(new Audio('sounds/sound' + (i+1) + '.wav') ) );
       soundArray[i].connect(gainNode);
       drumArray[i].addEventListener('mousedown', function() {
-        drumArray[i].style.opacity = '0.5';
-        soundArray[i].play();
-      }
+          drumArray[i].style.opacity = '0.5';
+          soundArray[i].play();
+        }
+      );
       drumArray[i].addEventListener('mouseup', function() {
-        drumArray[i].style.opacity = '1';
-      }
+          drumArray[i].style.opacity = '1';
+        }
+      );
     }
   </script>
   
