@@ -59,7 +59,7 @@
         let button = document.getElementById('button');
         button.addEventListener('click', function() {
             console.log('click');
-            console.log(input.value);
+            console.log(typeof input.value);
             if (input.value < 0 || input.value > 127 || !(Number.isInteger(parseInt(input.value))) ) {
               output.innerHTML = "Fehler, Input muss eine Zahl zwischen 0 und 127 sein!";
             } else {
