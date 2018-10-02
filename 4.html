@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype xhtml>
 <html lang="en">
 
 <head>
@@ -22,6 +22,29 @@
   <div id="drum2"></div>
   <div id="drum3"></div>
   <div id="drum4"></div>
+  
+  <script>
+    var context = new AudioContext();
+    let sound1 = new Audio('sounds/sound1.wav');
+    let sound2 = new Audio('sounds/sound2.wav');
+    let sound3 = new Audio('sounds/sound3.wav');
+    let sound4 = new Audio('sounds/sound4.wav');
+    let gainNode = context.createGain();
+    gainNode.gain.value = 0.8;
+    gainNode.connect(context.destination);
+    let drumArray = Array(4);
+    let soundArray = Array(4);
+    for (let i = 0; i < 4, i++) {
+      let id = "drum" + (i+1);
+      let name = "sound" + (i+1);
+      drumArray.push(document.getElementById(id));
+      soundArray.push(name);
+      soundArray[i].connect(gainNode);
+      drumArray[i].addEventListener('click', function() {
+        soundArray[i].play();
+      }
+    }
+  </script>
   
 </body>
 
