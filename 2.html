@@ -3,12 +3,17 @@
 <head>
   <title>Aufgabe 2</title>
   <meta charset="UTF-8" />
+  <style>
+    #mainWrapper { position:absolute; left:50%; top:50%; }
+  </style>
 </head>
 <body onload="myFunc()">
-  <label for="input">MIDI-Note:</label>
-  <input id="input" type="number" />
-  <button type="button" id="button">Zeige MIDI-Frequenz</button>
-  <span id="output" width="200px"></span>
+  <div id="mainWrapper">
+    <label for="input">MIDI-Note:</label>
+    <input id="input" type="number" />
+    <button type="button" id="button">Zeige MIDI-Frequenz</button>
+    <span id="output" width="200px"></span>
+  </div>
   <script>
     var myFunc = function(){
       let input = document.getElementById('input');
