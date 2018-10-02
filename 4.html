@@ -9,36 +9,31 @@
   <title>Aufgabe 4</title>
 
   <style>
-    body > div { display:inline-block; width:50%; height:50%; }
-    body div#drum1 { background-color:#e99; }
-    body div#drum2 { background-color:#ee9; }
-    body div#drum3 { background-color:#9e9; }
-    body div#drum4 { background-color:#99e; }
+    html, body { width:100%; height:100%; }
+    body > div { display:inline-block; width:49%; height:50%; margin:0; padding:0; }
+    body div#drum1 { left:0; Top:0; color:#e99; }
+    body div#drum2 { Right:0; Top:0; color:#ee9; }
+    body div#drum3 { Right:0; Bottom:0; color:#9e9; }
+    body div#drum4 { Left:0; Bottom:0; color:#99e; }
   </style>
 </head>
 
 <body>
-  <div id="drum1"></div>
-  <div id="drum2"></div>
-  <div id="drum3"></div>
-  <div id="drum4"></div>
+  <div id="drum1" class="drumpad"></div>
+  <div id="drum2" class="drumpad"></div>
+  <div id="drum3" class="drumpad"></div>
+  <div id="drum4" class="drumpad"></div>
   
   <script>
     var context = new AudioContext();
-    let sound1 = new Audio('sounds/sound1.wav');
-    let sound2 = new Audio('sounds/sound2.wav');
-    let sound3 = new Audio('sounds/sound3.wav');
-    let sound4 = new Audio('sounds/sound4.wav');
     let gainNode = context.createGain();
     gainNode.gain.value = 0.8;
     gainNode.connect(context.destination);
-    let drumArray = Array(4);
-    let soundArray = Array(4);
+    let drumArray = document.getElementsByClassname('drumpad');
+    let soundArray = [];
     for (let i = 0; i < 4, i++) {
-      let id = "drum" + (i+1);
       let name = "sound" + (i+1);
-      drumArray.push(document.getElementById(id));
-      soundArray.push(name);
+      soundArray.push(context.createMediaElementSource(new Audio('sounds/sound' + (i+1) + '.wav') ) );
       soundArray[i].connect(gainNode);
       drumArray[i].addEventListener('click', function() {
         soundArray[i].play();
