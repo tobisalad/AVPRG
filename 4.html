@@ -29,7 +29,7 @@
     let gainNode = context.createGain();
     gainNode.gain.value = 0.8;
     gainNode.connect(context.destination);
-    let drumArray = document.getElementsByClassname('drumpad');
+    let drumArray = document.getElementsByClassName('drumpad');
     let soundArray = [];
     for (let i = 0; i < 4; i++) {
       let name = "sound" + (i+1);
