@@ -29,22 +29,44 @@
     var gainNode = context.createGain();
     gainNode.gain.value = 0.8;
     gainNode.connect(context.destination);
+
     var drumArray = document.getElementsByClassName('drumpad');
     var soundArray = [];
+    
     for (let i = 0; i < 4; i++) {
-      soundArray.push(new Audio('./sounds/sound' + (i+1) + '.wav') );
-      let soundNode = context.createMediaElementSource(soundArray[i]);
-      soundNode.connect(gainNode);
-      drumArray[i].addEventListener('mousedown', function() {
+      getData(i);
+
+      drumArray[i].addEventListener('mousedown', function(e) {
           drumArray[i].style.opacity = '0.5';
-          console.log(soundArray[i]);
-          soundArray[i].play();
+          playSound(i);
         }
       );
       drumArray[i].addEventListener('mouseup', function() {
           drumArray[i].style.opacity = '1';
         }
       );
+    }
+
+    function getData(i) {
+      let request = new XMLHttpRequest();
+      request.open('GET', "./sounds/sound" + (i+1) + ".wav", true);
+      request.responseType = 'arraybuffer';
+      request.onload = function() {
+          let undecodedAudio = request.response;
+          context.decodeAudioData(undecodedAudio, function (buffer) {
+              var sourceBuffer = context.createBufferSource();
+              soundArray[i] = buffer;
+              
+          });
+      }
+      request.send();
+    }
+
+    function playSound(i) {
+      let sourceBuffer = context.createBufferSource();
+      sourceBuffer.buffer = soundArray[i];
+      sourceBuffer.connect(gainNode);
+      sourceBuffer.start(context.currentTime);
     }
   </script>
   

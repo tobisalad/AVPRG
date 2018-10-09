@@ -1,0 +1,82 @@
+<!doctype xhtml>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Aufgabe 5</title>
+
+  <style>
+    html, body { width:100%; height:100%; }
+    
+  </style>
+</head>
+
+<body>
+  
+  
+  <script>
+    var context = new AudioContext(),
+        oscillator = null,
+        mouseDown = false,
+        gainNode = context.createGain();
+    
+    document.body.addEventListener('mousedown', function(e){
+        mouseDown = true;
+        oscillator = context.createOscillator();
+        if (oscillator) {
+            console.log("mousedown");
+            oscillator = context.createOscillator();
+            oscillator.connect(gainNode);
+            oscillator.start(context.currentTime);
+        }
+        gainNode.connect(context.destination);
+        calculateFrequencyAndGain(e);
+    });
+
+    document.body.addEventListener('mousemove', function(e){
+        /*console.log("X: " + e.clientX);
+        console.log("Y: " + e.clientY);
+        console.log("Width: " + window.innerWidth);
+        console.log("Height: " + window.innerHeight);*/
+        if (mouseDown) {
+            console.log("mousemove");
+            calculateFrequencyAndGain(e);
+        }
+
+    });
+    document.body.addEventListener('mouseleave', function() {
+        mouseDown = false;
+        if (oscillator) {
+            oscillator.stop(context.currentTime);
+            oscillator.disconnect();
+        }
+    });
+    document.body.addEventListener('mouseup', function() {
+        mouseDown = false;
+        if (oscillator) {
+            console.log("mouseup");
+            oscillator.stop(context.currentTime);
+            oscillator.disconnect();
+        }
+    });
+
+    function calculateFrequencyAndGain(e) {
+        let maxFrequency = 2000,
+            minFrequency = 20,
+            maxGain = 1,
+            minGain = 0;
+        
+        if (oscillator) {
+            console.log("Calculate");
+            oscillator.frequency.value = (e.clientX / window.innerWidth) * maxFrequency;
+        }
+        gainNode.gain.value = ((window.innerHeight - e.clientY) / window.innerHeight) * maxGain;
+    }
+  </script>
+  
+</body>
+
+</html>
