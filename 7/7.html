@@ -1,0 +1,82 @@
+<!doctype xhtml>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Aufgabe 7</title>
+
+  <style>
+    html, body { width:100%; height:100%; }
+    
+  </style>
+</head>
+  <fieldset>
+    <legend>Convolution</legend>
+    <label for="menu">Choose a Setting</label>
+    <select id="menu">
+        <option value="room">Room</option>
+        <option value="garage">Garage</option>
+        <option value="church">Church</option>
+        <option value="cave">Cave</option>
+    </select>
+
+  </fieldset>
+  <div id="buttonWrapper">
+      <button id="playButton">Play</button>
+  </div>
+<body>
+  
+  
+  <script>
+var context = new AudioContext();
+var sound = new Audio('sound.wav');
+var source = context.createMediaElementSource(sound);
+var convolver;
+var menu = document.getElementById('menu');
+var isPlaying = false;
+
+sound.loop = true;
+
+menu.addEventListener('change', function() {
+    getConvolution(menu.value);
+});
+
+playButton.addEventListener('click', function() {
+    if (!isPlaying) {
+        sound.play();
+        isPlaying = true;
+        playButton.innerHTML = 'Pause'
+    }else{
+        sound.pause();
+        isPlaying = false;
+        playButton.innerHTML = 'Play'
+    }
+});
+
+function getConvolution(name) {
+    var request = new XMLHttpRequest();
+    request.open('GET',  'impulseResponse/' + name + '.wav', true);
+    request.responseType = "arraybuffer";
+    request.onload = function() {
+        var undecodedAudio = request.response;
+        context.decodeAudioData(undecodedAudio, function (buffer) {
+            if (convolver) {convolver.disconnect();}
+            convolver = context.createConvolver();
+            convolver.buffer = buffer;
+            convolver.normalize = true;
+            
+            source.connect(convolver);
+            convolver.connect(context.destination);
+        });
+    }
+    request.send();
+}
+getConvolution(menu.value);
+  </script>
+  
+</body>
+
+</html>

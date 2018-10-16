@@ -1,0 +1,87 @@
+<!doctype xhtml>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Aufgabe 10</title>
+
+  <style>
+    html, body { padding:0; margin:0; text-align:center; background:#1dba9d; color:#e0d336; }
+    div { font-size:1.5em; font-family:sans-serif; }
+    #distortionContainer { background:#F79F79; width:100%; }
+    #playButton { background-color:#e0d336; border:none; color:#1dba9d; font-size:2.8em; padding:0.5em 1.5em; }
+    #playButton:active { background:#ffffff; }
+    .slider { margin:0; -webkit-appearance:none; appearance:none; width:100%; height:25px; background:#d3d3d3; outline:none; opacity:0.7; -webkit-transition:.2s; transition:opacity .2s; }
+    .slider:hover { opacity:1; }
+    .slider::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:25px; height:25px; background:#1dba9d; cursor:pointer; }
+    
+  </style>
+</head>
+    <div id="mainWrapper">
+        <button id="playButton">Play</button>
+
+        <div id="distortionContainer">
+            <label for="distortion">Distortion: <span id="distortionOutput">0</span></label>
+            <input type="range" class="slider" id="distortion" name="distortion" min="0" max="1000" value="0" step="1" />
+        </div>
+    
+  </div>
+<body>
+  
+  
+  <script>
+    var context = new AudioContext();
+    var audio = new Audio('../sounds/you-cant-rollerskate-in-a-buffalo-herd.mp3');
+    var source = context.createMediaElementSource(audio);
+    var distortion = context.createWaveShaper();
+    var playButton = document.getElementById('playButton')
+    var distortionSlider = document.getElementById('distortion');
+    var isPlaying = false;
+
+    source.connect(distortion);
+    distortion.connect(context.destination);
+
+    distortion.curve = makeDistortionCurve(distortionSlider.value);
+    distortion.oversample = "4X";
+
+    distortionSlider.addEventListener('input', function() {
+      distortion.curve = makeDistortionCurve(this.value);
+      document.getElementById('distortionOutput').innerHTML = this.value;
+    });
+
+    function makeDistortionCurve(amount) {    
+        var n_samples = 44100,
+            curve = new Float32Array(n_samples);
+        
+        for (var i = 0; i < n_samples; ++i ) {
+            var x = i * 2 / n_samples - 1;
+            curve[i] = (Math.PI + amount) * x / (Math.PI + (amount * Math.abs(x)));
+        }
+        
+        return curve;
+    };
+
+    playButton.addEventListener('click', function() {
+        if (!isPlaying) {
+          audio.play();
+          isPlaying = true;
+          playButton.innerHTML = 'Pause'
+        }else{
+          audio.pause();
+          isPlaying = false;
+          playButton.innerHTML = 'Play'
+        }
+    });
+
+    audio.addEventListener("ended", function () {
+        isPlaying = false;
+        playButton.innerHTML = "Play";
+    });
+  </script>
+  
+</body>
+
+</html>

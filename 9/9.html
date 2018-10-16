@@ -1,0 +1,136 @@
+<!doctype xhtml>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Aufgabe 9</title>
+
+  <style>
+    html, body { padding:0; margin:0; text-align:center; background:#1dba9d; color:#e0d336; }
+    div { font-size:1.5em; font-family:sans-serif; }
+    #gainContainer { background:#F79F79; width:100%; }
+    #detuneContainer { background:#5b6f69; width:100%; }
+    #qualityContainer { background:#7883bf; width:100%; }
+    #frequencyContainer { background:#bf7878; width:100%; }
+    #menuContainer #menu { background:#ba1d93; width:25%; height:auto; font-family:sans-serif; font-size:1.5em; color:#ffffff; }
+    #playButton { background-color:#e0d336; border:none; color:#1dba9d; font-size:2.8em; padding:0.5em 1.5em; }
+    #playButton:active { background:#ffffff; }
+    .slider { margin:0; -webkit-appearance:none; appearance:none; width:100%; height:25px; background:#d3d3d3; outline:none; opacity:0.7; -webkit-transition:.2s; transition:opacity .2s; }
+    .slider:hover { opacity:1; }
+    .slider::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:25px; height:25px; background:#1dba9d; cursor:pointer; }
+    
+  </style>
+</head>
+    <div id="mainWrapper">
+        <button id="playButton">Play</button>
+
+        <div id="gainContainer">
+            <label for="gain">Gain: <span id="gainOutput">0</span> dB</label>
+            <input type="range" class="slider" id="gain" name="gain" min="-40" max="40" value="0" step="1" />
+        </div>
+
+        <div id="detuneContainer">
+            <label for="detune">Detune: <span id="detuneOutput">0</span> Cents</label>
+            <input type="range" class="slider" id="detune" name="detune" min="0" max="200" value="0" step="1" />
+        </div>
+
+        <div id="qualityContainer">
+            <label for="quality">Quality: <span id="qualityOutput">0</span></label>
+            <input type="range" class="slider" id="quality" name="quality" min="0.0001" max="1000" value="0" step="0.0001" />
+        </div>
+
+        <div id="frequencyContainer">
+            <label for="frequency">Frequency: <span id="frequencyOutput">300</span> Hz</label>
+            <input type="range" class="slider" id="frequency" name="frequency" min="20" max="20000" value="300" step="50" />
+        </div>
+
+        <div id="menuContainer">
+            <select id="menu">
+                <option value="lowpass">Low Pass</option>
+                <option value="highpass">High Pass</option>
+                <option value="bandpass">Band Pass</option>
+                <option value="allpass">All Pass</option>
+                <option value="notch">Notch</option>
+                <option value="lowshelf">Lowshelf</option>
+                <option value="highshelf">Highshelf</option>
+                <option value="peaking">Peaking</option>
+            </select>
+        </div>
+    
+  </div>
+<body>
+  
+  
+  <script>
+    var context = new AudioContext();
+    var audio = new Audio('../sounds/you-cant-rollerskate-in-a-buffalo-herd.mp3');
+    var source = context.createMediaElementSource(audio);
+    var filter = context.createBiquadFilter();
+    var playButton = document.getElementById('playButton')
+    var gainSlider = document.getElementById('gain');
+    var detuneSlider = document.getElementById('detune');
+    var qualitySlider = document.getElementById('quality');
+    var frequencySlider = document.getElementById('frequency');
+    reductionOutput = document.getElementById('reductionOutput');
+    var isPlaying = false;
+
+    source.connect(filter);
+    filter.connect(context.destination);
+
+    filter.type = menu.value;
+    filter.gain.value = gainSlider.value;
+    filter.detune.value = detuneSlider.value;
+    filter.Q.value = qualitySlider.value;
+    filter.frequency.value = frequencySlider.value;
+
+    menu.addEventListener('change', function() {
+        filter.type = menu.value;
+        filter.gain.value = gainSlider.value;
+        filter.detune.value = detuneSlider.value;
+        filter.Q.value = qualitySlider.value;
+        filter.frequency.value = frequencySlider.value;
+    });
+
+    gainSlider.addEventListener('input', function() {
+      filter.gain.value = this.value;
+      document.getElementById('gainOutput').innerHTML = this.value;
+    });
+    detuneSlider.addEventListener('input', function() {
+      filter.detune.value = this.value;
+      document.getElementById('detuneOutput').innerHTML = this.value;
+    });
+    qualitySlider.addEventListener('input', function() {
+        filter.Q.value = this.value;
+        document.getElementById('qualityOutput').innerHTML = this.value;
+    });
+    frequencySlider.addEventListener('input', function() {
+        filter.frequency.value = this.value;
+        document.getElementById('frequencyOutput').innerHTML = this.value;
+    });
+
+
+
+    playButton.addEventListener('click', function() {
+        if (!isPlaying) {
+          audio.play();
+          isPlaying = true;
+          playButton.innerHTML = 'Pause'
+        }else{
+          audio.pause();
+          isPlaying = false;
+          playButton.innerHTML = 'Play'
+        }
+    });
+
+    audio.addEventListener("ended", function () {
+        isPlaying = false;
+        playButton.innerHTML = "Play";
+    });
+  </script>
+  
+</body>
+
+</html>
